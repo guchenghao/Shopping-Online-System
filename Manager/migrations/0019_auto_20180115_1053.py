@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('Manager', '0018_auto_20180115_1050'),
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name='products',
+            name='produceTime',
+            field=models.DateField(null=True, blank=True),
+        ),
+        migrations.AddField(
+            model_name='products',
+            name='saleTime',
+            field=models.DateField(),
+            preserve_default=False,
+        ),
+    ]

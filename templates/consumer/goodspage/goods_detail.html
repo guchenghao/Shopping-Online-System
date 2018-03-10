@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>商品详情</title>
+
+	{% load static %}
+	<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<style>
+		body {
+			/* padding-top:70px; */
+			background-color: #f6f6f6;
+		}
+
+		.m-label {
+			display: inline-block;
+			width: 50px;
+			color: #999;
+		}
+
+		.p-price {
+			/* font-size:18px; */
+			color: #E4393C;
+		}
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+				    aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/Goods/home_page">食品在线商城</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul id="nav-ul" class="nav navbar-nav navbar-right">
+					{% if user.name %}
+					<li>
+						<p id="username" class="navbar-text" style="display:none;color:blue"></p>
+					</li>
+					<li id="login">
+						<a href="#">你好，{{ user.name }}</a>
+					</li>
+					<li id="cart">
+						<a href="/Goods/cart">购物车</a>
+					</li>
+					<li>
+						<a href="/Goods/order">我的订单</a>
+					</li>
+					<li>
+						<a href="/Goods/editInfo">个人中心</a>
+					</li>
+					<li id="logout">
+						<a href="/User/logout">退出</a>
+					</li>
+					{% else %}
+					<li id="login">
+						<a href="/User/login">请登录</a>
+					</li>
+					<li id="register">
+						<a href="/User/signup">用户注册</a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<!-- <div class="container">
+		<div class="row">
+			<div class="col-md-3 col-sm-3"></div>
+			<div class="col-md-6 col-sm-6">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="商品名称">
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="button">搜索</button>
+					</span>
+				</div>
+			</div>
+			<div class="col-md-3"></div>
+		</div>
+	</div> -->
+
+	<div class="container">
+		<div class="row">
+			<h4 class="page-header" style="padding-left:20px">商品详情</h4>
+		</div>
+	</div>
+	{% if product %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5">
+				<img id="mainImg" width="450px" src="{{product.picture.url}}">
+			</div>
+			<div class="col-md-7">
+				<h3 id="name" style="font-size:20px">{{ product.name }}</h3>
+				<p id="subtitle" style="font-size:15px;color:#e4393c"></p>
+				<div style="margin-top:20px">
+					<h4 style="display:inline-block;">
+						<span class="label label-primary">价格:</span>
+					</h4>
+					<span class="p-price">
+						<span>￥</span>
+						<span id="price" style="font-size:25px">{{product.price}}</span>
+					</span>
+				</div>
+				<div style="margin-top:20px">
+					<h4 style="display:inline-block;">
+						<span class="label label-primary">库存:</span>
+					</h4>
+					<span id="stock">{{product.Inventory}}</span>
+				</div>
+				<div style="margin-top:20px">
+					<h4 style="display:inline-block;">
+						<span class="label label-primary">商品类别:</span>
+					</h4>
+					<span id="stock">{{product.productType}}</span>
+				</div>
+				<div style="margin-top:20px">
+					<h4 style="display:inline-block;">
+						<span class="label label-primary">生产日期:</span>
+					</h4>
+					<span id="stock">{{product.produceTime}}</span>
+				</div>
+				<div style="margin-top:20px">
+					<h4 style="display:inline-block;">
+						<span class="label label-primary">保质期:</span>
+					</h4>
+					<span id="stock">{{product.expTime}}</span>
+					<span> 个月</span>
+				</div>
+				<form action="/Goods/add_to_cart/?productID={{product.id}}&cusID={{user.id}}" method="POST">
+					{% csrf_token %}
+					<div class="row" style="margin-top:20px">
+						<div class="col-md-1">
+							<h4 style="display:inline-block;">
+								<span class="label label-primary">数量:</span>
+							</h4>
+						</div>
+						<div class="col-md-3">
+							<div class="input-group input-group-sm" style="margin-right: 45px">
+								<input id="cartNum" type="number" class="form-control" name="goodsNum" value="1" max="{{product.Inventory}}" min="1">
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-danger btn-lg" style="margin-top:20px" name="add_to_cart">加入购物车</button>
+					<!-- {% if success %}
+					<span href="#" class="text-danger">{{success}}</span>
+					{% endif %} -->
+				</form>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<h3>
+					<span class="label label-danger">商品介绍</span>
+				</h3>
+				<div class="panel panel-default">
+					<div id="detail" class="panel-body">
+						<pre><p class="text-default" style="font-size:18px;">{{ product.info }}</p></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<h3>
+					<span class="label label-danger">评论区</span>
+				</h3>
+				<div class="panel panel-default">
+					<div id="detail" class="panel-body">
+						<!-- <pre><p class="text-default" style="font-size:18px;">{{ product.info }}</p></pre> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="container">
+		<div class="col-md-3 col-sm-3 col-md-offset-5" style="margin-top:80px;">
+			<h2 class="text-danger">商品未找到</h2>
+		</div>
+	</div>
+	{% endif %}
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+	<script src="js/jquery-1.12.4.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/bootstrap.min.js"></script>
+
+	<!-- loginCheck.js -->
+	<script src="js/loginCheck.js"></script>
+	<!-- goods_detail.js -->
+	<script src="js/goods_detail.js"></script>
+</body>
+
+</html>
